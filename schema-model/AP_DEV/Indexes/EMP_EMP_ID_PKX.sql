@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX ap_dev.emp_emp_id_pkx ON ap_dev.employees(employee_id);

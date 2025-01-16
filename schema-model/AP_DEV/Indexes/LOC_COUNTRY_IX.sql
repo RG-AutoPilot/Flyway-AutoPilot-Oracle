@@ -1,0 +1,1 @@
+CREATE INDEX ap_dev.loc_country_ix ON ap_dev.locations(country_id);

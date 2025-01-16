@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX ap_dev.dept_id_pkx ON ap_dev.departments(department_id);

@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX ap_dev.country_c_id_pkx ON ap_dev.countries(country_id);

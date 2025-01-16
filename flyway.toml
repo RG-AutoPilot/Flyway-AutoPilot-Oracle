@@ -1,0 +1,131 @@
+databaseType = "Oracle"
+id = "9c5f3f9a-88a4-4325-bc88-7892196dbb0c"
+name = "Oracle-AutoPilot"
+
+[flyway]
+locations = [ "filesystem:migrations" ]
+mixed = true
+outOfOrder = true
+schemaModelLocation = "schema-model"
+validateMigrationNaming = true
+baselineVersion = "001_20250116173942"
+baselineOnMigrate = true
+
+  [flyway.check]
+  majorTolerance = 0
+
+  [flyway.oracle]
+  sqlplus = true
+
+[flywayDesktop]
+developmentEnvironment = "development"
+shadowEnvironment = "shadow"
+
+  [flywayDesktop.generate]
+  undoScripts = true
+
+[redgateCompare]
+filterFile = "filter.rgf"
+
+  [redgateCompare.oracle]
+  ignoreRulesFile = "IgnoreRules.scpf"
+  filterFile = "Filter.scpf"
+
+[redgateCompare.oracle.options.behavior]
+forceColumnOrder = false
+useForwardSlash = false
+includeSetDefineOff = true
+includeSetBlankLinesOn = false
+includeSystemPermissions = false
+includeUserRoles = false
+includeProgramUnitRoles = false
+includeCrossSchemaPermissions = true
+excludeSchemaNames = true
+detectRenamedColumns = true
+addPurgeClauseToAllTableDrops = false
+suppressDependentAlterCompile = false
+includeSetDefineOffToScripter = true
+
+[redgateCompare.oracle.options.ignores]
+ignoreSlowDependencies = true
+ignoreDependentObjectsInOtherSchemas = true
+ignoreWhitespace = true
+ignoreCaseDifferencesInPlSqlBlocks = false
+ignoreDoubleQuotesInPlSqlBlocks = true
+ignoreExternalTableLocationInformation = false
+ignoreCommentsInPlSqlBlocks = false
+ignoreCommentsOnTablesViewsAndColumns = false
+ignoreConstraintNames = false
+ignoreIndexNames = false
+ignoreLobStorage = false
+ignoreParallel = false
+ignoreSequenceCurrentValue = true
+ignorePermissions = true
+ignoreSupplementalLogGroups = false
+ignoreMaterializedViewStartWithValue = true
+ignoreLengthSemantics = false
+ignoreSystemPartitions = false
+
+[redgateCompare.oracle.options.storage]
+includeAllStorage = false
+includeStorageCompression = false
+includeStorageDeferredSegments = false
+includeStorageExtents = false
+includeStorageIlmPolicies = false
+includeStorageIniTrans = false
+includeStorageLobsAndVarrays = false
+includeStorageLogging = false
+includeStoragePartitioning = false
+includeStoragePctFree = false
+includeStorageTablespace = false
+
+[redgateCompare.oracle.data.options.comparison]
+checkTablesForData = false
+includeViews = false
+trimTrailingSpaces = false
+ignoreControlCharacters = false
+ignoreWhiteSpace = false
+includeSourceTables = true
+ignoreDateTypeDifferences = false
+
+[environments.development]
+url = "jdbc:oracle:thin:@//localhost:1521/dev1"
+user = "HR"
+password = "Redg@te1"
+schemas = [ "AP_DEV" ]
+displayName = "Development database"
+
+[environments.Test]
+url = "jdbc:oracle:thin:@//localhost:1521/dev1"
+user = "HR"
+password = "Redg@te1"
+schemas = [ "AP_TEST" ]
+displayName = "Test database"
+
+[environments.Prod]
+url = "jdbc:oracle:thin:@//localhost:1521/dev1"
+user = "HR"
+password = "Redg@te1"
+schemas = [ "AP_PROD" ]
+displayName = "Prod database"
+
+[environments.shadow]
+url = "jdbc:oracle:thin:@//localhost:1521/dev1"
+user = "HR"
+password = "Redg@te1"
+schemas = [ "AP_SHADOW" ]
+displayName = "Development database"
+
+[environments.Build]
+url = "jdbc:oracle:thin:@//localhost:1521/dev1"
+user = "HR"
+password = "Redg@te1"
+schemas = [ "AP_BUILD" ]
+displayName = "Build database"
+
+[environments.Check]
+url = "jdbc:oracle:thin:@//localhost:1521/dev1"
+user = "HR"
+password = "Redg@te1"
+schemas = [ "AP_CHECK" ]
+displayName = "Check database"
