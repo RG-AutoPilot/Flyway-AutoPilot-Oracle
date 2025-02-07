@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX ap_dev.loc_id_pkx ON ap_dev.locations(location_id);
