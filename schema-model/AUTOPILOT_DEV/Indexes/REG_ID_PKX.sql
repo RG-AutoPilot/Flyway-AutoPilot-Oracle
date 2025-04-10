@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX autopilot_dev.reg_id_pkx ON autopilot_dev.regions(region_id);

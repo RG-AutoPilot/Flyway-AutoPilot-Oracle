@@ -1,0 +1,1 @@
+CREATE INDEX autopilot_dev.loc_city_ix ON autopilot_dev.locations(city);

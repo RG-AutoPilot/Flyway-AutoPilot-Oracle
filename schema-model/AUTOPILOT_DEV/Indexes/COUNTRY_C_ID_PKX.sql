@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX autopilot_dev.country_c_id_pkx ON autopilot_dev.countries(country_id);

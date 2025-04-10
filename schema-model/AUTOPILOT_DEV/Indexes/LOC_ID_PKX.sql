@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX autopilot_dev.loc_id_pkx ON autopilot_dev.locations(location_id);

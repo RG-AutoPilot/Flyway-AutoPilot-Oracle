@@ -1,0 +1,1 @@
+CREATE INDEX autopilot_dev.jhist_dept_ix ON autopilot_dev.job_history(department_id);

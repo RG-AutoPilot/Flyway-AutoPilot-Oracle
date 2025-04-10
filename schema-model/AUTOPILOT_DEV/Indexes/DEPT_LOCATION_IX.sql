@@ -1,0 +1,1 @@
+CREATE INDEX autopilot_dev.dept_location_ix ON autopilot_dev.departments(location_id);

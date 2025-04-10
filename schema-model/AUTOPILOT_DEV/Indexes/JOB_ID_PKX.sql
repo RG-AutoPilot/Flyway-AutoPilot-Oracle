@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX autopilot_dev.job_id_pkx ON autopilot_dev.jobs(job_id);

@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX autopilot_dev.dept_id_pkx ON autopilot_dev.departments(department_id);

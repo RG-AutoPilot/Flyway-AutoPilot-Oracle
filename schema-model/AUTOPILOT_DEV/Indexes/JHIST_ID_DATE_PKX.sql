@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX autopilot_dev.jhist_id_date_pkx ON autopilot_dev.job_history(employee_id,start_date);

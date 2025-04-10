@@ -1,0 +1,23 @@
+🧪 Step 1: Oracle Data Pump Directory Check
+Have you confirmed an Oracle directory exists for Data Pump? (Y/N): Enter the Oracle DIRECTORY name (e.g., DATA_PUMP_DIR): Enter your Oracle username: Enter your Oracle password: 
+Enter your Oracle SID or Service name (e.g., orcl or dev1): Enter the schema you want to export (e.g., HR): Enter the target schema name for import (e.g., AUTOPILOT_DEV): 
+📦 Exporting schema 'HR' from dev1...
+
+Export: Release 19.0.0.0.0 - Production on Thu Apr 10 13:30:55 2025
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.
+
+Connected to: Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+ORA-39001: invalid argument value
+ORA-39000: bad dump file specification
+ORA-31641: unable to create dump file "C:\Oracle\admin\orcl\dpdump/E6A847C489074B54AC62DBC0359AC316\HR_export.dmp"
+ORA-27038: created file already exists
+OSD-04010: <create> option specified, file already exists
+
+
+
+❌ Script exited early. Please check the log at: flyway_oracle_autopilot_run.log
+❌ Export failed. Check 'HR_export.log' and 'flyway_oracle_autopilot_run.log'.
+[H[2J[3J
+❌ Script exited early. Please check the log at: flyway_oracle_autopilot_run.log

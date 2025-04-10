@@ -1,0 +1,1 @@
+CREATE INDEX autopilot_dev.loc_country_ix ON autopilot_dev.locations(country_id);

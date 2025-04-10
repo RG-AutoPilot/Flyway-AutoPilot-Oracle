@@ -1,0 +1,1 @@
+CREATE INDEX autopilot_dev.loc_state_prov_ix ON autopilot_dev.locations(state_province);

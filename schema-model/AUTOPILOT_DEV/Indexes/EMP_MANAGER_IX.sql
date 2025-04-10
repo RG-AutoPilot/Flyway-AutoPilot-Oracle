@@ -1,0 +1,1 @@
+CREATE INDEX autopilot_dev.emp_manager_ix ON autopilot_dev.employees(manager_id);

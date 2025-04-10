@@ -1,0 +1,1 @@
+CREATE INDEX autopilot_dev.emp_job_ix ON autopilot_dev.employees(job_id);
