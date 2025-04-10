@@ -1,1 +1,0 @@
-CREATE INDEX ap_dev.jhist_job_ix ON ap_dev.job_history(job_id);

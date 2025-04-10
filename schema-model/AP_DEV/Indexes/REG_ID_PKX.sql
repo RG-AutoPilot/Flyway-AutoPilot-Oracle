@@ -1,1 +1,0 @@
-CREATE UNIQUE INDEX ap_dev.reg_id_pkx ON ap_dev.regions(region_id);

@@ -1,1 +1,0 @@
-CREATE INDEX ap_dev.dept_location_ix ON ap_dev.departments(location_id);

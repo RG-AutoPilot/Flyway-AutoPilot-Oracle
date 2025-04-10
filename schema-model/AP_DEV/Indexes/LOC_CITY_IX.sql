@@ -1,1 +1,0 @@
-CREATE INDEX ap_dev.loc_city_ix ON ap_dev.locations(city);

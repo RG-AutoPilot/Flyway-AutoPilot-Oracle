@@ -1,1 +1,0 @@
-CREATE INDEX ap_dev.emp_department_ix ON ap_dev.employees(department_id);

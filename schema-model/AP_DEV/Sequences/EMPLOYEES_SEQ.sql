@@ -1,1 +1,0 @@
-CREATE SEQUENCE ap_dev.employees_seq NOCACHE;
