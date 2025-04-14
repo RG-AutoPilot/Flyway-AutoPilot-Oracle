@@ -1,65 +1,85 @@
 #!/bin/bash
 
 LOGFILE="flyway_oracle_autopilot_run.log"
-: > "$LOGFILE"  # Clear log file
+: > "$LOGFILE"
 
-# Trap unexpected exits and dump helpful message
-trap 'echo -e "\n❌ Script exited early. Please check the log at: $LOGFILE"' ERR EXIT
+# Redirect stdout and stderr to log file, but keep output in terminal too
+exec 3>&1 4>&2
+exec > >(tee -a "$LOGFILE") 2> >(tee -a "$LOGFILE" >&2)
 
-exec > >(tee -a "$LOGFILE") 2>&1  # Redirect all output to log
-
-echo "🧪 Step 1: Oracle Data Pump Directory Check"
+echo "Step 1: Oracle Data Pump Directory Check"
 read -p "Have you confirmed an Oracle directory exists for Data Pump? (Y/N): " confirm_dir
-
-if [[ "$confirm_dir" != "Y" && "$confirm_dir" != "y" ]]; then
-  echo "❌ Please create or validate your Data Pump directory before continuing."
-  echo "Tip: Run this SQL query as a DBA:"
-  echo "  SELECT directory_name, directory_path FROM dba_directories;"
+[[ "$confirm_dir" =~ ^[Yy]$ ]] || {
+  echo "Please confirm your Data Pump directory exists before proceeding."
+  echo "Run this SQL to check: SELECT directory_name, directory_path FROM dba_directories;"
+  read -p "Press Enter to exit..."
   exit 1
-fi
+}
 
 read -p "Enter the Oracle DIRECTORY name (e.g., DATA_PUMP_DIR): " ORACLE_DIR
-read -p "Enter your Oracle username: " ORACLE_USER
-read -s -p "Enter your Oracle password: " ORACLE_PASS
+read -p "Enter Oracle username: " ORACLE_USER
+read -s -p "Enter Oracle password: " ORACLE_PASS
 echo
-read -p "Enter your Oracle SID or Service name (e.g., orcl or dev1): " ORACLE_SID
-read -p "Enter the schema you want to export (e.g., HR): " SOURCE_SCHEMA
-read -p "Enter the target schema name for import (e.g., AUTOPILOT_DEV): " TARGET_SCHEMA
+read -p "Enter Oracle SID or Service Name (e.g., orcl or dev1): " ORACLE_SID
+read -p "Enter the schema you want to export/import (e.g., HR): " SOURCE_SCHEMA
 
 DUMP_FILE="${SOURCE_SCHEMA}_export.dmp"
 EXPORT_LOG="${SOURCE_SCHEMA}_export.log"
-IMPORT_LOG="import_${TARGET_SCHEMA}.log"
 
 echo ""
-echo "📦 Exporting schema '$SOURCE_SCHEMA' from $ORACLE_SID..."
-expdp "${ORACLE_USER}/${ORACLE_PASS}@${ORACLE_SID}" \
-  SCHEMAS=$SOURCE_SCHEMA \
-  DIRECTORY=$ORACLE_DIR \
-  DUMPFILE=$DUMP_FILE \
-  LOGFILE=$EXPORT_LOG \
-  CONTENT=METADATA_ONLY
+read -p "Would you like to run a new export for schema '$SOURCE_SCHEMA'? (Y/N): " do_export
+if [[ "$do_export" =~ ^[Yy]$ ]]; then
+  echo ""
+  echo "Exporting schema '${SOURCE_SCHEMA}' from ${ORACLE_SID}..."
+  expdp "${ORACLE_USER}/${ORACLE_PASS}@${ORACLE_SID}" \
+    SCHEMAS=$SOURCE_SCHEMA \
+    DIRECTORY=$ORACLE_DIR \
+    DUMPFILE=$DUMP_FILE \
+    LOGFILE=$EXPORT_LOG \
+    CONTENT=METADATA_ONLY \
+    REUSE_DUMPFILES=Y
 
-if [ $? -ne 0 ]; then
-  echo "❌ Export failed. Check '$EXPORT_LOG' and '$LOGFILE'."
-  exit 1
+  if [ $? -ne 0 ]; then
+    echo ""
+    echo "Export failed. Check '$EXPORT_LOG' and '$LOGFILE'."
+    read -p "Press Enter to continue or Ctrl+C to quit..."
+  else
+    echo "Export successful."
+  fi
+else
+  echo "Skipping export. Make sure '$DUMP_FILE' already exists in '$ORACLE_DIR'."
 fi
 
 echo ""
-echo "🔁 Importing schema into '$TARGET_SCHEMA' (remapped from '$SOURCE_SCHEMA')..."
-impdp "${ORACLE_USER}/${ORACLE_PASS}@${ORACLE_SID}" \
-  SCHEMAS=$SOURCE_SCHEMA \
-  DIRECTORY=$ORACLE_DIR \
-  DUMPFILE=$DUMP_FILE \
-  LOGFILE=$IMPORT_LOG \
-  CONTENT=METADATA_ONLY \
-  REMAP_SCHEMA=${SOURCE_SCHEMA}:${TARGET_SCHEMA}
+echo "You can now import into Flyway environments."
 
-if [ $? -ne 0 ]; then
-  echo "❌ Import failed. Check '$IMPORT_LOG' and '$LOGFILE'."
-  exit 1
-fi
+ENVIRONMENTS=("AUTOPILOTDEV" "AUTOPILOTTEST" "AUTOPILOTPROD" "AUTOPILOTSHADOW" "AUTOPILOTCHECK" "AUTOPILOTBUILD")
 
-trap - ERR EXIT  # Remove trap on successful finish
+for TARGET_SCHEMA in "${ENVIRONMENTS[@]}"; do
+  read -p "Would you like to import into environment '$TARGET_SCHEMA'? (Y/N): " do_import
+  if [[ "$do_import" =~ ^[Yy]$ ]]; then
+    IMPORT_LOG="import_${TARGET_SCHEMA}.log"
+    echo ""
+    echo "Importing into '$TARGET_SCHEMA'..."
+    impdp "${ORACLE_USER}/${ORACLE_PASS}@${ORACLE_SID}" \
+      SCHEMAS=$SOURCE_SCHEMA \
+      DIRECTORY=$ORACLE_DIR \
+      DUMPFILE=$DUMP_FILE \
+      LOGFILE=$IMPORT_LOG \
+      CONTENT=METADATA_ONLY \
+      REMAP_SCHEMA=${SOURCE_SCHEMA}:${TARGET_SCHEMA}
+
+    if [ $? -ne 0 ]; then
+      echo "Import into '$TARGET_SCHEMA' failed. Check '$IMPORT_LOG'."
+    else
+      echo "Import into '$TARGET_SCHEMA' succeeded."
+    fi
+  else
+    echo "Skipping '$TARGET_SCHEMA'."
+  fi
+done
+
 echo ""
-echo "✅ Success! Schema '$SOURCE_SCHEMA' exported and imported into '$TARGET_SCHEMA'."
-echo "📝 See full run log at: $LOGFILE"
+echo "All requested actions complete."
+echo "Log written to: $LOGFILE"
+read -p "Press Enter to close..."
