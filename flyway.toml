@@ -106,6 +106,17 @@ displayName = "Check database"
 
 [environments.shadow]
 url = "jdbc:oracle:thin:@//localhost:1521/dev1"
-schemas = [ "AUTOPILOTSHADOW" ]
-displayName = "Shadow database"
-provisioner = "clean"
+user = "HR"
+password = "${localSecret.MyPasswordKey}"
+schemas = ["AUTOPILOTSHADOW"]
+provisioner = "backup"
+ 
+[environments.shadow.resolvers.backup]
+backupFilePath = "DATA_PUMP_DIR:HR_EXPORT.dmp"
+backupVersion = "001"
+oracle.connectionIdentifier = "HR/hr@localhost:1521/dev1"
+oracle.importContent = "METADATA_ONLY"
+oracle.ignoreErrors = true
+ 
+[environments.shadow.resolvers.backup.oracle.schemaMapping]
+"HR" = "AUTOPILOTSHADOW"
