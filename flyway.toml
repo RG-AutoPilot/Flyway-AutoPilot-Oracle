@@ -83,3 +83,29 @@ includeStorageLogging = false
 includeStoragePartitioning = false
 includeStoragePctFree = false
 includeStorageTablespace = false
+
+[environments.development]
+url = "jdbc:oracle:thin:@//localhost:1521/dev1"
+schemas = [ "AUTOPILOTDEV" ]
+displayName = "Development database"
+
+[environments.Test]
+url = "jdbc:oracle:thin:@//localhost:1521/dev1"
+schemas = [ "AUTOPILOTTEST" ]
+displayName = "Test database"
+
+[environments.Prod]
+url = "jdbc:oracle:thin:@//localhost:1521/dev1"
+schemas = [ "AUTOPILOTPROD" ]
+displayName = "Production database"
+
+[environments.Check]
+url = "jdbc:oracle:thin:@//localhost:1521/dev1"
+schemas = [ "AUTOPILOTCHECK" ]
+displayName = "Check database"
+
+[environments.shadow]
+url = "jdbc:oracle:thin:@//localhost:1521/dev1"
+schemas = [ "AUTOPILOTSHADOW" ]
+displayName = "Shadow database"
+provisioner = "clean"
