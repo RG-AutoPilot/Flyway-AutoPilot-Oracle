@@ -67,7 +67,8 @@ for TARGET_SCHEMA in "${ENVIRONMENTS[@]}"; do
       DUMPFILE=$DUMP_FILE \
       LOGFILE=$IMPORT_LOG \
       CONTENT=METADATA_ONLY \
-      REMAP_SCHEMA=${SOURCE_SCHEMA}:${TARGET_SCHEMA}
+      REMAP_SCHEMA=${SOURCE_SCHEMA}:${TARGET_SCHEMA} \
+      TRANSFORM=OID:N
 
     if [ $? -ne 0 ]; then
       echo "Import into '$TARGET_SCHEMA' failed. Check '$IMPORT_LOG'."
